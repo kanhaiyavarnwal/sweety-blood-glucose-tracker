@@ -1,12 +1,7 @@
-
 import pool from "../config/db.js";
 
-
 const isValidDate = (date) => {
-  if (
-    typeof date !== "string" ||
-    !/^\d{4}-\d{2}-\d{2}$/.test(date)
-  ) {
+  if (typeof date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return false;
   }
 
@@ -18,13 +13,11 @@ const isValidDate = (date) => {
   );
 };
 
-// DAILY REPORT
 const getDailyReport = async (req, res) => {
   try {
     const userId = req.userId;
     const { date } = req.query;
 
-    // 1. Validate date
     if (!date || !isValidDate(date)) {
       return res.status(400).json({
         success: false,
@@ -32,7 +25,6 @@ const getDailyReport = async (req, res) => {
       });
     }
 
-    // 2. Calculate statistics
     const statsResult = await pool.query(
       `SELECT
           MAX(glucose_value) AS highest,
@@ -42,10 +34,9 @@ const getDailyReport = async (req, res) => {
        FROM readings
        WHERE user_id = $1
        AND reading_date = $2`,
-      [userId, date]
+      [userId, date],
     );
 
-    // 3. Get individual readings
     const readingsResult = await pool.query(
       `SELECT
           id,
@@ -62,7 +53,7 @@ const getDailyReport = async (req, res) => {
             WHEN 'after_lunch' THEN 3
             WHEN 'after_dinner' THEN 4
           END`,
-      [userId, date]
+      [userId, date],
     );
 
     const stats = statsResult.rows[0];
@@ -78,7 +69,6 @@ const getDailyReport = async (req, res) => {
         readings: readingsResult.rows,
       },
     });
-
   } catch (error) {
     console.error("Daily report error:", error);
 
@@ -89,8 +79,6 @@ const getDailyReport = async (req, res) => {
   }
 };
 
-
-
 const getMonthlyReport = async (req, res) => {
   try {
     const userId = req.userId;
@@ -98,7 +86,6 @@ const getMonthlyReport = async (req, res) => {
     const month = Number(req.query.month);
     const year = Number(req.query.year);
 
-    // 1. Validate month and year
     if (
       !Number.isInteger(month) ||
       month < 1 ||
@@ -113,7 +100,6 @@ const getMonthlyReport = async (req, res) => {
       });
     }
 
-    // 2. Calculate monthly statistics
     const statsResult = await pool.query(
       `SELECT
           MAX(glucose_value) AS highest,
@@ -126,10 +112,9 @@ const getMonthlyReport = async (req, res) => {
        AND reading_date < (
          make_date($2, $3, 1) + INTERVAL '1 month'
        )`,
-      [userId, year, month]
+      [userId, year, month],
     );
 
-    // 3. Calculate day-wise statistics
     const dailyResult = await pool.query(
       `SELECT
           reading_date AS date,
@@ -145,7 +130,7 @@ const getMonthlyReport = async (req, res) => {
        )
        GROUP BY reading_date
        ORDER BY reading_date ASC`,
-      [userId, year, month]
+      [userId, year, month],
     );
 
     const stats = statsResult.rows[0];
@@ -162,7 +147,6 @@ const getMonthlyReport = async (req, res) => {
         dailyReports: dailyResult.rows,
       },
     });
-
   } catch (error) {
     console.error("Monthly report error:", error);
 
@@ -172,6 +156,5 @@ const getMonthlyReport = async (req, res) => {
     });
   }
 };
-
 
 export { getDailyReport, getMonthlyReport };

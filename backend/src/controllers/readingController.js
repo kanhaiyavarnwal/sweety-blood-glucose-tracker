@@ -1,4 +1,3 @@
-
 import pool from "../config/db.js";
 
 const VALID_SLOTS = [
@@ -8,12 +7,8 @@ const VALID_SLOTS = [
   "after_dinner",
 ];
 
-
 const isValidDate = (date) => {
-  if (
-    typeof date !== "string" ||
-    !/^\d{4}-\d{2}-\d{2}$/.test(date)
-  ) {
+  if (typeof date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
     return false;
   }
 
@@ -26,7 +21,13 @@ const isValidDate = (date) => {
 };
 
 const validateReading = (reading_date, time_slot, glucose_value) => {
-  if (!reading_date || !time_slot || glucose_value === undefined || glucose_value === null || glucose_value === "") {
+  if (
+    !reading_date ||
+    !time_slot ||
+    glucose_value === undefined ||
+    glucose_value === null ||
+    glucose_value === ""
+  ) {
     return "Date, time slot and glucose value are required.";
   }
 
@@ -49,20 +50,18 @@ const validateReading = (reading_date, time_slot, glucose_value) => {
   return null;
 };
 
-// CREATE READING
 const addReading = async (req, res) => {
   const client = await pool.connect();
-//   console.log("Client connected for adding reading",client);
-// console.log("Request body:", req.body);
+
+  console.log("Request body:", req.body);
   try {
     const { reading_date, time_slot, glucose_value } = req.body;
     const userId = req.userId;
 
-    // 1. Validate input
     const validationError = validateReading(
       reading_date,
       time_slot,
-      glucose_value
+      glucose_value,
     );
 
     if (validationError) {
@@ -73,11 +72,11 @@ const addReading = async (req, res) => {
     }
 
     await client.query("BEGIN");
-console.log("userid: ",userId)
-    // 2. Lock user row to serialize daily reading creation
+    console.log("userid: ", userId);
+
     const user = await client.query(
       "SELECT id FROM users WHERE id = $1 FOR UPDATE",
-      [userId]
+      [userId],
     );
 
     if (user.rows.length === 0) {
@@ -89,10 +88,9 @@ console.log("userid: ",userId)
       });
     }
 
-    // 3. Check future date
     const futureCheck = await client.query(
       "SELECT $1::date > CURRENT_DATE AS is_future",
-      [reading_date]
+      [reading_date],
     );
 
     if (futureCheck.rows[0].is_future) {
@@ -104,12 +102,11 @@ console.log("userid: ",userId)
       });
     }
 
-    // 4. Check daily limit
     const countResult = await client.query(
       `SELECT COUNT(*)::int AS total
        FROM readings
        WHERE user_id = $1 AND reading_date = $2`,
-      [userId, reading_date]
+      [userId, reading_date],
     );
 
     if (countResult.rows[0].total >= 4) {
@@ -121,13 +118,12 @@ console.log("userid: ",userId)
       });
     }
 
-    // 5. Insert reading
     const result = await client.query(
       `INSERT INTO readings
        (user_id, reading_date, time_slot, glucose_value)
        VALUES ($1, $2, $3, $4)
        RETURNING id, reading_date, time_slot, glucose_value`,
-      [userId, reading_date, time_slot, glucose_value]
+      [userId, reading_date, time_slot, glucose_value],
     );
 
     await client.query("COMMIT");
@@ -137,7 +133,6 @@ console.log("userid: ",userId)
       message: "Glucose reading added successfully.",
       reading: result.rows[0],
     });
-
   } catch (error) {
     await client.query("ROLLBACK");
 
@@ -154,18 +149,15 @@ console.log("userid: ",userId)
       success: false,
       message: "Internal server error.",
     });
-
   } finally {
     client.release();
   }
 };
 
-
 const getReadings = async (req, res) => {
   try {
     const userId = req.userId;
     const { date } = req.query;
-    console.log('req,query: ',req.query);
 
     if (date && !isValidDate(date)) {
       return res.status(400).json({
@@ -187,7 +179,7 @@ const getReadings = async (req, res) => {
          WHEN 'after_lunch' THEN 3
          WHEN 'after_dinner' THEN 4
        END`,
-      [userId, date || null]
+      [userId, date || null],
     );
 
     return res.status(200).json({
@@ -195,7 +187,6 @@ const getReadings = async (req, res) => {
       total: result.rows.length,
       readings: result.rows,
     });
-
   } catch (error) {
     console.error("Get readings error:", error);
 
@@ -206,11 +197,8 @@ const getReadings = async (req, res) => {
   }
 };
 
-
-
- const updateReading = async (req, res) => {
+const updateReading = async (req, res) => {
   const client = await pool.connect();
-  
 
   try {
     const userId = req.userId;
@@ -228,7 +216,7 @@ const getReadings = async (req, res) => {
     const validationError = validateReading(
       reading_date,
       time_slot,
-      glucose_value
+      glucose_value,
     );
 
     if (validationError) {
@@ -240,18 +228,15 @@ const getReadings = async (req, res) => {
 
     await client.query("BEGIN");
 
-    // Lock the user's row
-    await client.query(
-      "SELECT id FROM users WHERE id = $1 FOR UPDATE",
-      [userId]
-    );
+    await client.query("SELECT id FROM users WHERE id = $1 FOR UPDATE", [
+      userId,
+    ]);
 
-    // Check reading ownership
     const existing = await client.query(
       `SELECT id FROM readings
        WHERE id = $1 AND user_id = $2
        FOR UPDATE`,
-      [readingId, userId]
+      [readingId, userId],
     );
 
     if (existing.rows.length === 0) {
@@ -263,10 +248,9 @@ const getReadings = async (req, res) => {
       });
     }
 
-    // Check future date
     const futureCheck = await client.query(
       "SELECT $1::date > CURRENT_DATE AS is_future",
-      [reading_date]
+      [reading_date],
     );
 
     if (futureCheck.rows[0].is_future) {
@@ -278,14 +262,13 @@ const getReadings = async (req, res) => {
       });
     }
 
-    // Check other readings on target date
     const countResult = await client.query(
       `SELECT COUNT(*)::int AS total
        FROM readings
        WHERE user_id = $1
        AND reading_date = $2
        AND id <> $3`,
-      [userId, reading_date, readingId]
+      [userId, reading_date, readingId],
     );
 
     if (countResult.rows[0].total >= 4) {
@@ -297,7 +280,6 @@ const getReadings = async (req, res) => {
       });
     }
 
-    // Update reading
     const result = await client.query(
       `UPDATE readings
        SET reading_date = $1,
@@ -306,7 +288,7 @@ const getReadings = async (req, res) => {
            updated_at = CURRENT_TIMESTAMP
        WHERE id = $4 AND user_id = $5
        RETURNING id, reading_date, time_slot, glucose_value`,
-      [reading_date, time_slot, glucose_value, readingId, userId]
+      [reading_date, time_slot, glucose_value, readingId, userId],
     );
 
     await client.query("COMMIT");
@@ -316,7 +298,6 @@ const getReadings = async (req, res) => {
       message: "Reading updated successfully.",
       reading: result.rows[0],
     });
-
   } catch (error) {
     await client.query("ROLLBACK");
 
@@ -333,13 +314,10 @@ const getReadings = async (req, res) => {
       success: false,
       message: "Internal server error.",
     });
-
   } finally {
     client.release();
   }
 };
-
-
 
 const deleteReading = async (req, res) => {
   try {
@@ -357,7 +335,7 @@ const deleteReading = async (req, res) => {
       `DELETE FROM readings
        WHERE id = $1 AND user_id = $2
        RETURNING id`,
-      [readingId, userId]
+      [readingId, userId],
     );
 
     if (result.rows.length === 0) {
@@ -371,7 +349,6 @@ const deleteReading = async (req, res) => {
       success: true,
       message: "Reading deleted successfully.",
     });
-
   } catch (error) {
     console.error("Delete reading error:", error.message);
 
@@ -381,9 +358,5 @@ const deleteReading = async (req, res) => {
     });
   }
 };
-
-
-
-
 
 export { addReading, getReadings, updateReading, deleteReading };

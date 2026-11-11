@@ -1,8 +1,11 @@
-import express from "express"
+import express from "express";
 
 const router = express.Router();
 
-import { getDailyReport, getMonthlyReport } from "../controllers/reportController.js";
+import {
+  getDailyReport,
+  getMonthlyReport,
+} from "../controllers/reportController.js";
 
 import { authMiddleware } from "../middleware/authMiddleware.js";
 

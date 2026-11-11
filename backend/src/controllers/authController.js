@@ -1,18 +1,11 @@
-
-
-
-
-
-
 import bcrypt from "bcrypt";
 import pool from "../config/db.js";
-import jwt from "jsonwebtoken"; 
-// REGISTER USER
+import jwt from "jsonwebtoken";
+
 const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // 1. Check required fields
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -20,7 +13,6 @@ const register = async (req, res) => {
       });
     }
 
-    // 2. Validate name
     if (name.trim().length < 2) {
       return res.status(400).json({
         success: false,
@@ -28,7 +20,6 @@ const register = async (req, res) => {
       });
     }
 
-    // 3. Validate email
     const normalizedEmail = email.trim().toLowerCase();
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -40,7 +31,6 @@ const register = async (req, res) => {
       });
     }
 
-    // 4. Validate password
     if (password.length < 8) {
       return res.status(400).json({
         success: false,
@@ -48,10 +38,9 @@ const register = async (req, res) => {
       });
     }
 
-    // 5. Check existing user
     const existingUser = await pool.query(
       "SELECT id FROM users WHERE LOWER(email) = $1",
-      [normalizedEmail]
+      [normalizedEmail],
     );
 
     if (existingUser.rows.length > 0) {
@@ -61,15 +50,13 @@ const register = async (req, res) => {
       });
     }
 
-    // 6. Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // 7. Insert user into PostgreSQL
     const result = await pool.query(
       `INSERT INTO users (name, email, password_hash)
        VALUES ($1, $2, $3)
        RETURNING id, name, email, created_at`,
-      [name.trim(), normalizedEmail, hashedPassword]
+      [name.trim(), normalizedEmail, hashedPassword],
     );
 
     const user = result.rows[0];
@@ -79,11 +66,9 @@ const register = async (req, res) => {
       message: "Registration successful.",
       user,
     });
-
   } catch (error) {
     console.error("Register error:", error);
 
-    // Handle concurrent duplicate registrations
     if (error.code === "23505") {
       return res.status(409).json({
         success: false,
@@ -98,13 +83,10 @@ const register = async (req, res) => {
   }
 };
 
-
-// LOGIN USER
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // 1. Check required fields
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -114,12 +96,11 @@ const login = async (req, res) => {
 
     const normalizedEmail = email.trim().toLowerCase();
 
-    // 2. Find user
     const result = await pool.query(
       `SELECT id, name, email, password_hash
        FROM users
        WHERE LOWER(email) = $1`,
-      [normalizedEmail]
+      [normalizedEmail],
     );
 
     if (result.rows.length === 0) {
@@ -131,10 +112,9 @@ const login = async (req, res) => {
 
     const user = result.rows[0];
 
-    // 3. Compare password
     const isPasswordCorrect = await bcrypt.compare(
       password,
-      user.password_hash
+      user.password_hash,
     );
 
     if (!isPasswordCorrect) {
@@ -144,14 +124,10 @@ const login = async (req, res) => {
       });
     }
 
-    // 4. Generate JWT token
-    const token = jwt.sign(
-      { userId: user.id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
+    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
 
-    // 5. Remove password hash
     const safeUser = {
       id: user.id,
       name: user.name,
@@ -164,7 +140,6 @@ const login = async (req, res) => {
       token,
       user: safeUser,
     });
-
   } catch (error) {
     console.error("Login error:", error);
 
@@ -181,9 +156,8 @@ const getProfile = async (req, res) => {
       `SELECT id, name, email, created_at
        FROM users
        WHERE id = $1`,
-      [req.userId]
+      [req.userId],
     );
-    console.log("User profile result:", result.rows[0]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({
@@ -196,7 +170,6 @@ const getProfile = async (req, res) => {
       success: true,
       user: result.rows[0],
     });
-
   } catch (error) {
     console.error("Profile error:", error);
 
@@ -206,6 +179,5 @@ const getProfile = async (req, res) => {
     });
   }
 };
-
 
 export { register, login, getProfile };
