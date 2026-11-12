@@ -8,342 +8,342 @@ sweety-blood-glucose-tracker
 
 3. Features
 
-  Authentication
+            Authentication
 
-    User registration and login.
+                    User registration and login.
 
-    JWT-based authentication.
+                    JWT-based authentication.
 
-    Password hashing using bcrypt.
+                    Password hashing using bcrypt.
 
-    Protected application routes.
+                    Protected application routes.
 
-    Change password functionality.
-
-
-   Glucose Readings
-
-    Add daily blood glucose readings.
-
-    View all glucose readings.
-
-    Update existing readings.
-
-    Delete readings.
-
-    Categorize readings by time slot:
-
-        Morning (Fasting)
-
-        After Breakfast
-
-        After Lunch
-
-        After Dinner
+                    Change password functionality.
 
 
-  Dashboard
+            Glucose Readings
 
-    Today's glucose overview.
+                    Add daily blood glucose readings.
 
-    Monthly glucose statistics.
+                    View all glucose readings.
 
-    Average glucose levels.
+                    Update existing readings.
 
-    Highest and lowest readings.
+                    Delete readings.
 
-    Recent glucose readings.
+            Categorize readings by time slot:
 
-    Monthly glucose trend chart.
+                    Morning (Fasting)
 
-  Reports
+                    After Breakfast
 
-    Generate daily reports.
+                    After Lunch
 
-    Generate monthly reports.
+                    After Dinner
 
-    View daily reading details.
 
-    Analyze average, highest, and lowest glucose levels.
+            Dashboard
 
-Profile Management
+                    Today's glucose overview.
 
-    View account information.
+                    Monthly glucose statistics.
 
-    Update profile name.
+                    Average glucose levels.
 
-    Change account password.
+                    Highest and lowest readings.
+
+                    Recent glucose readings.
+
+                    Monthly glucose trend chart.
+
+            Reports
+
+                    Generate daily reports.
+
+                    Generate monthly reports.
+
+                    View daily reading details.
+
+                    Analyze average, highest, and lowest glucose levels.
+
+            Profile Management
+
+                    View account information.
+
+                    Update profile name.
+
+                    Change account password.
 
 3. Tech Stack
 
-    Frontend
+            Frontend
 
-        React 19
+                React 19
 
-        Vite
+                Vite
 
-        React Router DOM
+                React Router DOM
 
-        Tailwind CSS 4
+                Tailwind CSS 4
 
-        Axios
+                Axios
 
-        Recharts
+                Recharts
 
-        Lucide React
+                Lucide React
 
-        React Hot Toast
+                React Hot Toast
 
-    Backend
+            Backend
 
-        Node.js
+                Node.js
 
-        Express.js 5
+                Express.js 5
 
-        PostgreSQL
+                PostgreSQL
 
-        PostgreSQL Node.js driver (pg)
+                PostgreSQL Node.js driver (pg)
 
-        JWT (JSON Web Token)
+                JWT (JSON Web Token)
 
-        bcrypt
+                bcrypt
 
-        CORS
+                CORS
 
-        dotenv
+                dotenv
 
 
 4. Project Structure
 
-                sweety-blood-glucose-tracker/
-                |
-                |--backend/
-                |  |--src/
-                |    |--config/
-                |    |--controllers/
-                |    |--middleware/
-                |    |--routes/
-                |    |--index.js/
-                |    |--.env
-                |    |--.gitignore/
-                |    |--package-lock.json/
-                |    |--package.json/
-                |    
-                |
-                |--frontend/
-                |   |--src/
-                |      |--components/
-                |      |--context/
-                |      |--layout/
-                |      |--pages/
-                |      |--services/
-                |      |--App.jsx/
-                |      |--index.css/
-                |      |--main.jsx/
-                |      |--.env/
-                |      |--.gitignore/
-                |      |--index.html/
-                |      |--package-lock.json/
-                |      |--package.json/
-                |      |--vite.config.js/
-                |
-                |
-                |--Screenshot
-                |
-                |--README.md
-                |
-                |
+                        sweety-blood-glucose-tracker/
+                        |
+                        |--backend/
+                        |  |--src/
+                        |    |--config/
+                        |    |--controllers/
+                        |    |--middleware/
+                        |    |--routes/
+                        |    |--index.js/
+                        |    |--.env
+                        |    |--.gitignore/
+                        |    |--package-lock.json/
+                        |    |--package.json/
+                        |    
+                        |
+                        |--frontend/
+                        |   |--src/
+                        |      |--components/
+                        |      |--context/
+                        |      |--layout/
+                        |      |--pages/
+                        |      |--services/
+                        |      |--App.jsx/
+                        |      |--index.css/
+                        |      |--main.jsx/
+                        |      |--.env/
+                        |      |--.gitignore/
+                        |      |--index.html/
+                        |      |--package-lock.json/
+                        |      |--package.json/
+                        |      |--vite.config.js/
+                        |
+                        |
+                        |--Screenshot
+                        |
+                        |--README.md
+                        |
+                        |
 
 
 5. Prerequisites
-    Before running the application, make sure you have installed:
+            Before running the application, make sure you have installed:
 
-      (a)  Node.js(LatestVersion recommended)
+            (a)  Node.js(LatestVersion recommended)
 
-      (b)  npm
+            (b)  npm
 
-      (c)  PostgreSQL    (a)install
+            (c)  PostgreSQL    (a)install
 
-                         (b)open pgAdmin or open sql Shell
+                                (b)open pgAdmin or open sql Shell
 
-                         (c)after open pgAdmin (1)create database with same  
-                            name which is on .env file and open sql shell and connect  
-                             database to server 
+                                (c)after open pgAdmin (1)create database with same  
+                                    name which is on .env file and open sql shell and connect  
+                                    database to server 
 
-                         (d) go to query Tool
+                                (d) go to query Tool
 
-                         (e)execute Query for create table // this is for  user
+                                (e)execute Query for create table // this is for  user
 
-                                CREATE TABLE users (
-                                id SERIAL PRIMARY KEY,
-                                    name VARCHAR(100) NOT NULL,
-                                    email VARCHAR(255) NOT NULL,
-                                    password_hash VARCHAR(255) NOT NULL,
-                                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                                );
+                                        CREATE TABLE users (
+                                        id SERIAL PRIMARY KEY,
+                                            name VARCHAR(100) NOT NULL,
+                                            email VARCHAR(255) NOT NULL,
+                                            password_hash VARCHAR(255) NOT NULL,
+                                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                        );
 
-                         (f) after that execute this Query -> 
-                                    CREATE UNIQUE INDEX users_email_unique
-                                    ON users (LOWER(email));
+                                (f) after that execute this Query -> 
+                                            CREATE UNIQUE INDEX users_email_unique
+                                            ON users (LOWER(email));
 
-                         (g) after that execute this Query for create table -> 
-                                  
-                                 CREATE TABLE readings (
-                                   id SERIAL PRIMARY KEY,
+                                (g) after that execute this Query for create table -> 
+                                        
+                                        CREATE TABLE readings (
+                                        id SERIAL PRIMARY KEY,
 
-                                    user_id INTEGER NOT NULL
-                                        REFERENCES users(id)
-                                        ON DELETE CASCADE,
+                                            user_id INTEGER NOT NULL
+                                                REFERENCES users(id)
+                                                ON DELETE CASCADE,
 
-                                    reading_date DATE NOT NULL,
+                                            reading_date DATE NOT NULL,
 
-                                    time_slot VARCHAR(30) NOT NULL
-                                        CHECK (
-                                            time_slot IN (
-                                                'morning',
-                                                'after_breakfast',
-                                                'after_lunch',
-                                                'after_dinner'
-                                            )
-                                        ),
+                                            time_slot VARCHAR(30) NOT NULL
+                                                CHECK (
+                                                    time_slot IN (
+                                                        'morning',
+                                                        'after_breakfast',
+                                                        'after_lunch',
+                                                        'after_dinner'
+                                                    )
+                                                ),
 
-                                    glucose_value INTEGER NOT NULL
-                                        CHECK (glucose_value BETWEEN 40 AND 600),
+                                            glucose_value INTEGER NOT NULL
+                                                CHECK (glucose_value BETWEEN 40 AND 600),
 
-                                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-                                   
-                                    UNIQUE(user_id, reading_date, time_slot)
-                                );
-                      
-                      
-      (d) Git
+                                        
+                                            UNIQUE(user_id, reading_date, time_slot)
+                                        );
+                            
+                            
+            (d) Git
 
 
 6. Installation & Setup
   
-  (i) Clone the Repository
+                (i) Clone the Repository
 
-    Open terminal and execute one by one first-> (a) then -> (b) 
+                    Open terminal and execute one by one first-> (a) then -> (b) 
 
-    a. git clone https://github.com/kanhaiyavarnwal/sweety-blood-glucose-tracker.git
+                    a. git clone https://github.com/kanhaiyavarnwal/sweety-blood-glucose-tracker.git
 
-    b. cd sweety-blood-glucose-tracker
+                    b. cd sweety-blood-glucose-tracker
 
-  (ii). Backend Setup
+                (ii). Backend Setup
 
-     open forlder then  Open terminal and execute
- 
-      cd backend
+                    open forlder then  Open terminal and execute
+                
+                    cd backend
 
-   (iii) Install dependencies:
+                (iii) Install dependencies:
 
-        npm install
+                        npm install
 
-   (iv) Create a .env file in the backend directory.
+                (iv) Create a .env file in the backend directory.
 
-    PORT=5000
+                    PORT=5000
 
-    DB_HOST=localhost
-
-
-    DB_PORT=your db port
+                    DB_HOST=localhost
 
 
-    DB_NAME=your db name
+                    DB_PORT=your db port
 
 
-    DB_USER=db user_name
+                    DB_NAME=your db name
 
 
-    DB_PASSWORD="your postgresql password"
+                    DB_USER=db user_name
 
-    JWT_SECRET=as you want to keep
+
+                    DB_PASSWORD="your postgresql password"
+
+                    JWT_SECRET=as you want to keep
 
 Note: These are suggested environment variable names. Ensure they match the variables used in your backend source code.
 
 7. Database Setup
 
-    Install and start PostgreSQL.
+                    Install and start PostgreSQL.
 
-    all the process in postgresql install section which is above number-5 then go to c.
+                    all the process in postgresql install section which is above number-5 then go to c.
 
-    
+                    
 
-    Configure the database connection string in the backend .env file.
+                    Configure the database connection string in the backend .env file.
 
-    Run your database schema or migration setup to create the required tables.
+                    Run your database schema or migration setup to create the required tables.
 
 4. Start Backend Server
 
-    Development mode:
+                    Development mode:
 
-    npm run dev
+                    npm run dev
 
-    Backend server: http://localhost:5000 
+                    Backend server: http://localhost:5000 
 
 5. Frontend Setup
 
-    Open another terminal:
+            Open another terminal:
 
-        cd frontend
+                cd frontend
 
-    Install dependencies:
+             Install dependencies:
 
-    npm install
+                   npm install
 
-    Create a .env file: 
+            Create a .env file: 
 
-    VITE_BACKEND_URL=http://localhost:5000/api
+                VITE_BACKEND_URL=http://localhost:5000/api
 
 Note: Update the API URL according to your actual backend route prefix and    Axios configuration.
 
 6. Start Frontend
 
- Run the development server:
+            Run the development server:
 
-     npm run dev
+                npm run dev
 
-     Open the chrome:
+                Open the chrome:
 
-     http://localhost:5173  // paste it on your chrome tab
+                http://localhost:5173  // paste it on your chrome tab
 
-Environment Variables
+            Environment Variables
 
-     Never commit actual .env files or sensitive credentials to GitHub.
+                Never commit actual .env files or sensitive credentials to GitHub.
 
-Date and Time Handling
+            Date and Time Handling
 
-    The application uses UTC timestamps for storing date-time values and Asia/Kolkata for displaying dates in   
-    the Indian timezone.
+                The application uses UTC timestamps for storing date-time values and Asia/Kolkata for displaying dates in   
+                the Indian timezone.
 
-    Daily and monthly report calculations should use Indian timezone boundaries to prevent date mismatches.
+                Daily and monthly report calculations should use Indian timezone boundaries to prevent date mismatches.
 
 
-Notes
+7. Notes
 
-    Assumptions
+                Assumptions
 
-        PostgreSQL is used as the primary database.
+                    PostgreSQL is used as the primary database.
 
-        The backend runs separately from the React frontend.
+                    The backend runs separately from the React frontend.
 
-        JWT is used to authenticate users.
+                    JWT is used to authenticate users.
 
-        Reports are calculated from stored glucose readings.
+                    Reports are calculated from stored glucose readings.
 
-        Indian Standard Time (IST) is used for report date display.
+                    Indian Standard Time (IST) is used for report date display.
 
-    Future Improvements
+                Future Improvements
 
-        With more development time, I would like to add:
-            
-            Email verification and password reset.
+                    With more development time, I would like to add:
+                        
+                        Email verification and password reset.
 
-            Deployment monitoring and performance optimization
+                        Deployment monitoring and performance optimization
 
-            Improved data visualization and analytics.
+                        Improved data visualization and analytics.
 
 
  Author
