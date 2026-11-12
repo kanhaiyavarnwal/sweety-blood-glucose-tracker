@@ -6,6 +6,7 @@ dotenv.config();
 import authRoutes from "./routes/authRoutes.js";
 import readingRoutes from "./routes/readingRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
+import profileRoutes  from "./routes/profileRoutes.js"
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -41,6 +42,7 @@ app.get("/api/health", async (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/reading", readingRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/profile",profileRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
