@@ -1,4 +1,7 @@
 
+
+
+
 import {
   createContext,
   useContext,
@@ -14,6 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Verify logged-in user after refresh
   useEffect(() => {
     const verifyUser = async () => {
       const token = localStorage.getItem("token");
@@ -25,9 +29,19 @@ export const AuthProvider = ({ children }) => {
 
       try {
         const response = await api.get("/auth/me");
-        setUser(response.data.user);
+
+        const currentUser = response.data.user;
+
+        setUser(currentUser);
+
+        localStorage.setItem(
+          "user",
+          JSON.stringify(currentUser)
+        );
+
       } catch (error) {
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
         setUser(null);
       } finally {
         setLoading(false);
@@ -37,38 +51,34 @@ export const AuthProvider = ({ children }) => {
     verifyUser();
   }, []);
 
-//   const login = async (email, password) => {
-//     const response = await api.post("/auth/login", {
-//       email,
-//       password,
-//     });
+  // Login
+  const login = async (email, password) => {
+    try {
+      const response = await api.post("/auth/login", {
+        email,
+        password,
+      });
 
-//     localStorage.setItem("token", response.data.token);
-//     setUser(response.data.user);
+      const { token, user } = response.data;
 
-//     return response.data;
-//   };
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
 
+      setUser(user);
 
-const login = async (email, password) => {
-  try {
-    const response = await api.post("/auth/login", {
-      email,
-      password,
-    });
+      return response.data;
 
-    const { token, user } = response.data;
+    } catch (error) {
+      console.error(
+        "Login failed:",
+        error.response?.data || error.message
+      );
 
-    localStorage.setItem("token", token);
-    setUser(user);
+      throw error;
+    }
+  };
 
-    return response.data;
-  } catch (error) {
-    console.error("Login failed:", error.response?.data || error.message);
-    
-    throw error;
-  }
-};
+  // Register
   const register = async (name, email, password) => {
     try {
       const response = await api.post("/auth/register", {
@@ -78,14 +88,32 @@ const login = async (email, password) => {
       });
 
       return response.data;
+
     } catch (error) {
-      console.error("Registration failed:", error.response?.data || error.message);
+      console.error(
+        "Registration failed:",
+        error.response?.data || error.message
+      );
+
       throw error;
     }
   };
 
+  // Update User
+  const updateUser = (updatedUser) => {
+    setUser(updatedUser);
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(updatedUser)
+    );
+  };
+
+  // Logout
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
     setUser(null);
   };
 
@@ -96,6 +124,7 @@ const login = async (email, password) => {
         loading,
         login,
         register,
+        updateUser,
         logout,
       }}
     >
