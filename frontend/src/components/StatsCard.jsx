@@ -2,6 +2,7 @@
 import { Activity } from "lucide-react";
 
 const StatsCard = ({ title, value, unit, icon: Icon = Activity, color }) => {
+ 
   return (
     <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
       <div className="flex justify-between items-center">
