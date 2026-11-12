@@ -295,7 +295,7 @@ Note: These are suggested environment variable names. Ensure they match the vari
 
     Create a .env file: 
 
-    VITE_API_URL=http://localhost:5000/api
+    VITE_BACKEND_URL=http://localhost:5000/api
 
 Note: Update the API URL according to your actual backend route prefix and    Axios configuration.
 
