@@ -74,7 +74,7 @@ sweety-blood-glucose-tracker
 
                     Change account password.
 
-3. Tech Stack
+4. Tech Stack
 
             Frontend
 
@@ -113,7 +113,7 @@ sweety-blood-glucose-tracker
                 dotenv
 
 
-4. Project Structure
+5. Project Structure
 
                         sweety-blood-glucose-tracker/
                         |
@@ -155,7 +155,7 @@ sweety-blood-glucose-tracker
                         |
 
 
-5. Prerequisites
+6. Prerequisites
             Before running the application, make sure you have installed:
 
             (a)  Node.js(LatestVersion recommended)
@@ -221,7 +221,7 @@ sweety-blood-glucose-tracker
             (d) Git
 
 
-6. Installation & Setup
+7. Installation & Setup
   
                 (i) Clone the Repository
 
@@ -263,7 +263,7 @@ sweety-blood-glucose-tracker
 
 Note: These are suggested environment variable names. Ensure they match the variables used in your backend source code.
 
-7. Database Setup
+8. Database Setup
 
                     Install and start PostgreSQL.
 
@@ -275,7 +275,7 @@ Note: These are suggested environment variable names. Ensure they match the vari
 
                     Run your database schema or migration setup to create the required tables.
 
-8. Start Backend Server
+9. Start Backend Server
 
                     Development mode:
 
@@ -283,7 +283,7 @@ Note: These are suggested environment variable names. Ensure they match the vari
 
                     Backend server: http://localhost:5000 
 
-9. Frontend Setup
+10. Frontend Setup
 
             Open another terminal:
 
@@ -299,7 +299,7 @@ Note: These are suggested environment variable names. Ensure they match the vari
 
 Note: Update the API URL according to your actual backend route prefix and    Axios configuration.
 
-10. Start Frontend
+11. Start Frontend
 
             Run the development server:
 
@@ -321,7 +321,7 @@ Note: Update the API URL according to your actual backend route prefix and    Ax
                 Daily and monthly report calculations should use Indian timezone boundaries to prevent date mismatches.
 
 
-11. Notes
+12. Notes
 
                 Assumptions
 
