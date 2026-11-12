@@ -173,7 +173,7 @@ Installation & Setup
 
     Open terminal and execute one by one first-> (a) then -> (b) 
 
-    a. git clone https://github.com/kanhaiyavarnwal/sweety-blood-glucose-        tracker.git
+    a. git clone https://github.com/kanhaiyavarnwal/sweety-blood-glucose-    tracker.git
 
     b. cd sweety-blood-glucose-tracker
 
