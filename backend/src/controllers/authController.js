@@ -106,7 +106,7 @@ const login = async (req, res) => {
     if (result.rows.length === 0) {
       return res.status(401).json({
         success: false,
-        message: "Invalid email or password.",
+        message: "user is not register register first.",
       });
     }
 
@@ -120,7 +120,7 @@ const login = async (req, res) => {
     if (!isPasswordCorrect) {
       return res.status(401).json({
         success: false,
-        message: "Invalid email or password.",
+        message: "Invalid  password.",
       });
     }
 

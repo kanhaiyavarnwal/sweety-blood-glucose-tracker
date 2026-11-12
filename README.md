@@ -162,8 +162,62 @@ Prerequisites
 
       (b)  npm
 
-      (c)  PostgreSQL
+      (c)  PostgreSQL    (a)install
 
+                         (b)open pgAdmin or open sql Shell
+
+                         (c)after open pgAdmin (1)create database with same  
+                            name which is on .env file and open sql shell and connect  
+                             database to server 
+
+                         (d) go to query Tool
+
+                         (e)execute Query for create table // this is for  user
+
+                                CREATE TABLE users (
+                                id SERIAL PRIMARY KEY,
+                                    name VARCHAR(100) NOT NULL,
+                                    email VARCHAR(255) NOT NULL,
+                                    password_hash VARCHAR(255) NOT NULL,
+                                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                );
+
+                         (f) after that execute this Query -> 
+                                    CREATE UNIQUE INDEX users_email_unique
+                                    ON users (LOWER(email));
+
+                         (g) after that execute this Query for create table -> 
+                                  
+                                 CREATE TABLE readings (
+                                   id SERIAL PRIMARY KEY,
+
+                                    user_id INTEGER NOT NULL
+                                        REFERENCES users(id)
+                                        ON DELETE CASCADE,
+
+                                    reading_date DATE NOT NULL,
+
+                                    time_slot VARCHAR(30) NOT NULL
+                                        CHECK (
+                                            time_slot IN (
+                                                'morning',
+                                                'after_breakfast',
+                                                'after_lunch',
+                                                'after_dinner'
+                                            )
+                                        ),
+
+                                    glucose_value INTEGER NOT NULL
+                                        CHECK (glucose_value BETWEEN 40 AND 600),
+
+                                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+                                   
+                                    UNIQUE(user_id, reading_date, time_slot)
+                                );
+                      
+                      
       (d) Git
 
 
@@ -179,7 +233,7 @@ Installation & Setup
 
   2. Backend Setup
 
-      Open terminal and execute
+     open forlder then  Open terminal and execute
  
       cd backend
 
@@ -213,11 +267,9 @@ Note: These are suggested environment variable names. Ensure they match the vari
 
     Install and start PostgreSQL.
 
-    Open PostgreSQL using pgAdmin or psql.
+    all the process in postgresql install section which is above.
 
-    Create a database:
-
-    CREATE DATABASE  DB_NAME  ;  // same as .env file
+    
 
     Configure the database connection string in the backend .env file.
 
