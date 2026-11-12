@@ -1,8 +1,4 @@
-// const AddReading = () => {
-//   return <h1 className="text-2xl font-bold">Add Glucose Reading</h1>;
-// };
 
-// export default AddReading;
 
 
 import { useState } from "react";
@@ -30,7 +26,7 @@ const AddReading = () => {
     time_slot: "",
     glucose_value: "",
   });
-// console.log("api: ",api)
+
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -41,10 +37,10 @@ const AddReading = () => {
     { value: "after_dinner", label: "After Dinner" },
   ];
 
-  // Handle input changes
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-//    console.log(e)
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -56,7 +52,7 @@ const AddReading = () => {
     }));
   };
 
-  // Frontend validation
+ 
   const validateForm = () => {
     const newErrors = {};
 
@@ -107,7 +103,7 @@ const AddReading = () => {
       glucose_value: Number(formData.glucose_value),
     };
 
-    console.log("Payload:", payload);
+    
 
     const response = await api.post(
       `/reading/add-reading`,
@@ -126,7 +122,7 @@ const AddReading = () => {
       error.message ||
       "Unable to add glucose reading.";
 
-    console.error("Error adding reading:", error);
+    console.error("Error adding reading:", message);
     toast.error(message);
 
   } finally {
@@ -137,7 +133,7 @@ const AddReading = () => {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
 
-      {/* Header */}
+    
       <div className="flex items-center gap-3">
         <button
           type="button"
@@ -159,7 +155,7 @@ const AddReading = () => {
         </div>
       </div>
 
-      {/* Form Card */}
+    
       <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 md:p-8">
 
         <div className="flex items-center gap-3 mb-8">
@@ -180,7 +176,7 @@ const AddReading = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/* Date */}
+          
           <div>
             <label
               htmlFor="reading_date"
@@ -213,7 +209,7 @@ const AddReading = () => {
             )}
           </div>
 
-          {/* Time Slot */}
+        
           <div>
             <label
               htmlFor="time_slot"
@@ -252,7 +248,7 @@ const AddReading = () => {
             )}
           </div>
 
-          {/* Glucose Value */}
+        
           <div>
             <label
               htmlFor="glucose_value"
@@ -291,7 +287,7 @@ const AddReading = () => {
             </p>
           </div>
 
-          {/* Buttons */}
+          
           <div className="flex flex-col sm:flex-row gap-3 pt-4">
 
             <button

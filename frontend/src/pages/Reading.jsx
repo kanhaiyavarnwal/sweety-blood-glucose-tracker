@@ -1,12 +1,4 @@
-// const Readings = () => {
-//   return <h1 className="text-2xl font-bold">Glucose Readings</h1>;
-// };
-
-// export default Readings;
-
-
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Search,
   Pencil,
@@ -28,6 +20,7 @@ const timeSlots = [
 
 const getToday = () => {
   const date = new Date();
+
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
@@ -35,12 +28,35 @@ const getToday = () => {
   return `${year}-${month}-${day}`;
 };
 
-const formatDate = (date) => {
-  if (!date) return "-";
 
-  // Handles both YYYY-MM-DD and PostgreSQL date values
-  const dateString = String(date).slice(0, 10);
-  const [year, month, day] = dateString.split("-");
+const getInputDate = (date) => {
+  if (!date) return "";
+
+  const dateString = String(date);
+
+ 
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+    return dateString;
+  }
+
+  const parsedDate = new Date(dateString);
+
+  if (Number.isNaN(parsedDate.getTime())) return "";
+
+  const year = parsedDate.getFullYear();
+  const month = String(parsedDate.getMonth() + 1).padStart(2, "0");
+  const day = String(parsedDate.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+};
+
+
+const formatDate = (date) => {
+  const formattedDate = getInputDate(date);
+
+  if (!formattedDate) return "-";
+
+  const [year, month, day] = formattedDate.split("-");
 
   return `${day}-${month}-${year}`;
 };
@@ -53,6 +69,7 @@ const Reading = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const [editingReading, setEditingReading] = useState(null);
+
   const [editData, setEditData] = useState({
     reading_date: "",
     time_slot: "",
@@ -60,9 +77,10 @@ const Reading = () => {
   });
 
   const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
-  // Fetch readings
-  const fetchReadings = async (date = "") => {
+ 
+  const fetchReadings = useCallback(async (date = "") => {
     try {
       setLoading(true);
 
@@ -71,20 +89,21 @@ const Reading = () => {
       });
 
       setReadings(response.data.readings || []);
-
     } catch (error) {
+      console.error("Fetch error:", error.response?.data || error);
+
       toast.error(
         error.response?.data?.message ||
-        "Failed to fetch readings."
+          "Failed to fetch readings."
       );
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchReadings(filterDate);
-  }, [filterDate]);
+  }, [filterDate, fetchReadings]);
 
   // Get time slot label
   const getSlotLabel = (slot) => {
@@ -94,18 +113,18 @@ const Reading = () => {
     );
   };
 
-  // Open edit modal
+  
   const handleEdit = (reading) => {
     setEditingReading(reading.id);
 
     setEditData({
-      reading_date: String(reading.reading_date).slice(0, 10),
+      reading_date: getInputDate(reading.reading_date),
       time_slot: reading.time_slot,
       glucose_value: String(reading.glucose_value),
     });
   };
 
-  // Handle edit input
+
   const handleEditChange = (e) => {
     const { name, value } = e.target;
 
@@ -115,7 +134,20 @@ const Reading = () => {
     }));
   };
 
-  // Update reading
+  
+  const closeModal = () => {
+    if (saving) return;
+
+    setEditingReading(null);
+
+    setEditData({
+      reading_date: "",
+      time_slot: "",
+      glucose_value: "",
+    });
+  };
+
+ 
   const handleUpdate = async (e) => {
     e.preventDefault();
 
@@ -150,27 +182,32 @@ const Reading = () => {
         `/reading/readings/${editingReading}`,
         payload
       );
+      // in some cases here need to add validation 
 
       toast.success(
-        response.data.message || "Reading updated successfully."
+        response.data.message ||
+          "Reading updated successfully."
       );
 
       setEditingReading(null);
 
       await fetchReadings(filterDate);
-
     } catch (error) {
+      console.error("Update error:", error.response?.data || error);
+
       toast.error(
         error.response?.data?.message ||
-        "Failed to update reading."
+          "Failed to update reading."
       );
     } finally {
       setSaving(false);
     }
   };
 
-  // Delete reading
+  
   const handleDelete = async (id) => {
+    if (deletingId !== null) return;
+
     const confirmed = window.confirm(
       "Are you sure you want to delete this reading?"
     );
@@ -178,35 +215,54 @@ const Reading = () => {
     if (!confirmed) return;
 
     try {
-      await api.delete(`/readings/${id}`);
+      setDeletingId(id);
 
-      toast.success("Reading deleted successfully.");
+      await api.delete(`/reading/readings/${id}`);
 
       setReadings((prev) =>
-        prev.filter((reading) => reading.id !== id)
+        prev.filter(
+          (reading) => String(reading.id) !== String(id)
+        )
       );
 
+      toast.success("Reading deleted successfully.");
     } catch (error) {
+      console.error("Delete error:", error.response?.data || error);
+
       toast.error(
         error.response?.data?.message ||
-        "Failed to delete reading."
+          "Failed to delete reading."
       );
+    } finally {
+      setDeletingId(null);
     }
   };
 
-  // Search readings by slot
+
   const filteredReadings = readings.filter((reading) =>
     getSlotLabel(reading.time_slot)
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
   );
 
+  // Statistics
+  const values = readings.map((reading) =>
+    Number(reading.glucose_value)
+  ).filter(Number.isFinite);
+
+  const highestReading = values.length
+    ? Math.max(...values)
+    : "--";
+
+  const lowestReading = values.length
+    ? Math.min(...values)
+    : "--";
+
   return (
     <div className="space-y-6">
 
-      {/* Header */}
+  
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-
         <div>
           <h1 className="text-2xl font-bold text-slate-900">
             Glucose Readings
@@ -222,13 +278,15 @@ const Reading = () => {
           disabled={loading}
           className="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2.5 rounded-xl hover:bg-blue-700 disabled:opacity-50"
         >
-          <RefreshCw size={17} />
+          <RefreshCw
+            size={17}
+            className={loading ? "animate-spin" : ""}
+          />
           Refresh
         </button>
-
       </div>
 
-      {/* Statistics */}
+   
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
         <div className="bg-white border rounded-2xl p-5">
@@ -247,9 +305,12 @@ const Reading = () => {
           </p>
 
           <h2 className="text-3xl font-bold mt-2">
-            {readings.length
-              ? Math.max(...readings.map((r) => r.glucose_value))
-              : "--"}
+            {highestReading}
+            {values.length > 0 && (
+              <span className="text-sm font-normal text-slate-500 ml-1">
+                mg/dL
+              </span>
+            )}
           </h2>
         </div>
 
@@ -259,12 +320,14 @@ const Reading = () => {
           </p>
 
           <h2 className="text-3xl font-bold mt-2">
-            {readings.length
-              ? Math.min(...readings.map((r) => r.glucose_value))
-              : "--"}
+            {lowestReading}
+            {values.length > 0 && (
+              <span className="text-sm font-normal text-slate-500 ml-1">
+                mg/dL
+              </span>
+            )}
           </h2>
         </div>
-
       </div>
 
       {/* Filters */}
@@ -317,10 +380,9 @@ const Reading = () => {
             Clear date filter
           </button>
         )}
-
       </div>
 
-      {/* Readings Table */}
+    
       <div className="bg-white border rounded-2xl overflow-hidden">
 
         <div className="p-5 border-b">
@@ -339,7 +401,10 @@ const Reading = () => {
           </div>
         ) : filteredReadings.length === 0 ? (
           <div className="py-16 flex flex-col items-center text-center px-4">
-            <Activity size={42} className="text-slate-300 mb-3" />
+            <Activity
+              size={42}
+              className="text-slate-300 mb-3"
+            />
 
             <h3 className="font-semibold text-slate-700">
               No readings found
@@ -370,7 +435,6 @@ const Reading = () => {
                     key={reading.id}
                     className="hover:bg-slate-50"
                   >
-
                     <td className="px-6 py-4 text-sm font-medium">
                       {formatDate(reading.reading_date)}
                     </td>
@@ -402,27 +466,32 @@ const Reading = () => {
 
                         <button
                           onClick={() => handleDelete(reading.id)}
+                          disabled={deletingId === reading.id}
                           title="Delete reading"
-                          className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
+                          className="p-2 text-red-500 hover:bg-red-50 rounded-lg disabled:opacity-50"
                         >
-                          <Trash2 size={18} />
+                          {deletingId === reading.id ? (
+                            <RefreshCw
+                              size={18}
+                              className="animate-spin"
+                            />
+                          ) : (
+                            <Trash2 size={18} />
+                          )}
                         </button>
 
                       </div>
                     </td>
-
                   </tr>
                 ))}
 
               </tbody>
             </table>
-
           </div>
         )}
-
       </div>
 
-      {/* Edit Modal */}
+   
       {editingReading !== null && (
         <div className="fixed inset-0 z-[60] bg-black/40 flex items-center justify-center p-4">
 
@@ -435,17 +504,20 @@ const Reading = () => {
               </h2>
 
               <button
-                onClick={() => setEditingReading(null)}
+                onClick={closeModal}
                 disabled={saving}
                 aria-label="Close edit form"
-                className="p-2 hover:bg-slate-100 rounded-lg"
+                className="p-2 hover:bg-slate-100 rounded-lg disabled:opacity-50"
               >
                 <X size={20} />
               </button>
 
             </div>
 
-            <form onSubmit={handleUpdate} className="space-y-5">
+            <form
+              onSubmit={handleUpdate}
+              className="space-y-5"
+            >
 
               <div>
                 <label className="block text-sm font-semibold mb-2">
@@ -459,7 +531,7 @@ const Reading = () => {
                   max={getToday()}
                   onChange={handleEditChange}
                   required
-                  className="w-full border rounded-xl px-4 py-3"
+                  className="w-full border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -473,10 +545,13 @@ const Reading = () => {
                   value={editData.time_slot}
                   onChange={handleEditChange}
                   required
-                  className="w-full border rounded-xl px-4 py-3 bg-white"
+                  className="w-full border rounded-xl px-4 py-3 bg-white outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {timeSlots.map((slot) => (
-                    <option key={slot.value} value={slot.value}>
+                    <option
+                      key={slot.value}
+                      value={slot.value}
+                    >
                       {slot.label}
                     </option>
                   ))}
@@ -497,7 +572,7 @@ const Reading = () => {
                   value={editData.glucose_value}
                   onChange={handleEditChange}
                   required
-                  className="w-full border rounded-xl px-4 py-3"
+                  className="w-full border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -506,8 +581,8 @@ const Reading = () => {
                 <button
                   type="button"
                   disabled={saving}
-                  onClick={() => setEditingReading(null)}
-                  className="w-1/2 border rounded-xl py-3 font-semibold"
+                  onClick={closeModal}
+                  className="w-1/2 border rounded-xl py-3 font-semibold hover:bg-slate-50 disabled:opacity-50"
                 >
                   Cancel
                 </button>
@@ -523,14 +598,12 @@ const Reading = () => {
               </div>
 
             </form>
-
           </div>
-
         </div>
       )}
-
     </div>
   );
 };
 
 export default Reading;
+
