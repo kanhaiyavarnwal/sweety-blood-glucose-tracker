@@ -115,44 +115,44 @@ Profile Management
 
 4. Project Structure
 
-    sweety-blood-glucose-tracker/
-    |
-    |--backend/
-    |  |--src/
-    |    |--config/
-    |    |--controllers/
-    |    |--middleware/
-    |    |--routes/
-    |    |--index.js/
-    |    |--.env
-    |    |--.gitignore/
-    |    |--package-lock.json/
-    |    |--package.json/
-    |    
-    |
-    |--frontend/
-    |   |--src/
-    |      |--components/
-    |      |--context/
-    |      |--layout/
-    |      |--pages/
-    |      |--services/
-    |      |--App.jsx/
-    |      |--index.css/
-    |      |--main.jsx/
-    |      |--.env/
-    |      |--.gitignore/
-    |      |--index.html/
-    |      |--package-lock.json/
-    |      |--package.json/
-    |      |--vite.config.js/
-    |
-    |
-    |--Screenshot
-    |
-    |--README.md
-    |
-    |
+                sweety-blood-glucose-tracker/
+                |
+                |--backend/
+                |  |--src/
+                |    |--config/
+                |    |--controllers/
+                |    |--middleware/
+                |    |--routes/
+                |    |--index.js/
+                |    |--.env
+                |    |--.gitignore/
+                |    |--package-lock.json/
+                |    |--package.json/
+                |    
+                |
+                |--frontend/
+                |   |--src/
+                |      |--components/
+                |      |--context/
+                |      |--layout/
+                |      |--pages/
+                |      |--services/
+                |      |--App.jsx/
+                |      |--index.css/
+                |      |--main.jsx/
+                |      |--.env/
+                |      |--.gitignore/
+                |      |--index.html/
+                |      |--package-lock.json/
+                |      |--package.json/
+                |      |--vite.config.js/
+                |
+                |
+                |--Screenshot
+                |
+                |--README.md
+                |
+                |
 
 
 5. Prerequisites
