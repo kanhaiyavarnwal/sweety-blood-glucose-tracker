@@ -275,7 +275,7 @@ Note: These are suggested environment variable names. Ensure they match the vari
 
                     Run your database schema or migration setup to create the required tables.
 
-4. Start Backend Server
+8. Start Backend Server
 
                     Development mode:
 
@@ -283,7 +283,7 @@ Note: These are suggested environment variable names. Ensure they match the vari
 
                     Backend server: http://localhost:5000 
 
-5. Frontend Setup
+9. Frontend Setup
 
             Open another terminal:
 
@@ -299,7 +299,7 @@ Note: These are suggested environment variable names. Ensure they match the vari
 
 Note: Update the API URL according to your actual backend route prefix and    Axios configuration.
 
-6. Start Frontend
+10. Start Frontend
 
             Run the development server:
 
@@ -321,7 +321,7 @@ Note: Update the API URL according to your actual backend route prefix and    Ax
                 Daily and monthly report calculations should use Indian timezone boundaries to prevent date mismatches.
 
 
-7. Notes
+11. Notes
 
                 Assumptions
 
