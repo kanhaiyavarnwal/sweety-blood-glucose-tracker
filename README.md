@@ -1,14 +1,14 @@
 sweety-blood-glucose-tracker
 
 
-A full-stack Blood Glucose Tracking Application that helps users record, monitor, and analyze their blood glucose levels through daily and monthly reports.
+1. A full-stack Blood Glucose Tracking Application that helps users record, monitor, and analyze their blood glucose levels through daily and monthly reports.
 
 
-Users can manage their glucose readings, view dashboard statistics, track historical trends, and manage their account securely.
+2. Users can manage their glucose readings, view dashboard statistics, track historical trends, and manage their account securely.
 
-Features
+3. Features
 
-Authentication
+  Authentication
 
     User registration and login.
 
@@ -21,7 +21,7 @@ Authentication
     Change password functionality.
 
 
-Glucose Readings
+   Glucose Readings
 
     Add daily blood glucose readings.
 
@@ -42,7 +42,7 @@ Glucose Readings
         After Dinner
 
 
-Dashboard
+  Dashboard
 
     Today's glucose overview.
 
@@ -56,7 +56,7 @@ Dashboard
 
     Monthly glucose trend chart.
 
-Reports
+  Reports
 
     Generate daily reports.
 
@@ -74,7 +74,7 @@ Profile Management
 
     Change account password.
 
-Tech Stack
+3. Tech Stack
 
     Frontend
 
@@ -113,7 +113,7 @@ Tech Stack
         dotenv
 
 
-Project Structure
+4. Project Structure
 
     sweety-blood-glucose-tracker/
     |
@@ -155,7 +155,7 @@ Project Structure
     |
 
 
-Prerequisites
+5. Prerequisites
     Before running the application, make sure you have installed:
 
       (a)  Node.js(LatestVersion recommended)
@@ -221,9 +221,9 @@ Prerequisites
       (d) Git
 
 
-Installation & Setup
+6. Installation & Setup
   
-  1. Clone the Repository
+  (i) Clone the Repository
 
     Open terminal and execute one by one first-> (a) then -> (b) 
 
@@ -231,17 +231,17 @@ Installation & Setup
 
     b. cd sweety-blood-glucose-tracker
 
-  2. Backend Setup
+  (ii). Backend Setup
 
      open forlder then  Open terminal and execute
  
       cd backend
 
-    Install dependencies:
+   (iii) Install dependencies:
 
         npm install
 
-    Create a .env file in the backend directory.
+   (iv) Create a .env file in the backend directory.
 
     PORT=5000
 
@@ -263,11 +263,11 @@ Installation & Setup
 
 Note: These are suggested environment variable names. Ensure they match the variables used in your backend source code.
 
-3. Database Setup
+7. Database Setup
 
     Install and start PostgreSQL.
 
-    all the process in postgresql install section which is above.
+    all the process in postgresql install section which is above number-5 then go to c.
 
     
 
