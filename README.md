@@ -165,7 +165,7 @@ sweety-blood-glucose-tracker
             (c)  PostgreSQL    (a)install
 
                                 (b)open pgAdmin or open sql Shell
-
+  
                                 (c)after open pgAdmin (1)create database with same  
                                     name which is on .env file and open sql shell and connect  
                                     database to server 
@@ -267,7 +267,7 @@ Note: These are suggested environment variable names. Ensure they match the vari
 
                     Install and start PostgreSQL.
 
-                    all the process in postgresql install section which is above number-5 then go to c.
+                    all the process in postgresql install section which is above number-6c.
 
                     
 
