@@ -170,8 +170,8 @@ sweety-blood-glucose-tracker
                                     name which is on .env file and open sql shell and connect  
                                     database to server 
 
-                                (d) go to query Tool
-
+                                (d) go to query Tool in pgAdmin
+                            
                                 (e)execute Query for create table // this is for  user
 
                                         CREATE TABLE users (
